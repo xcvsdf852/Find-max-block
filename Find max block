@@ -1,0 +1,113 @@
+<?php
+    $origin = array(
+        array(1, 1, 0, 0, 0, 0, 0, 0, 0, 0),
+        array(1, 1, 0, 1, 1, 0, 0, 0, 0, 0),
+        array(0, 0, 0, 1, 1, 0, 0, 0, 0, 0),
+        array(0, 0, 0, 0, 0, 1, 1, 1, 0, 0),
+        array(1, 1, 1, 1, 1, 0, 0, 0, 0, 0),
+        array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+        array(1, 1, 1, 0, 1, 0, 1, 1, 1, 1),
+        array(1, 0, 0, 0, 1, 0, 1, 1, 1, 1),
+        array(1, 0, 0, 0, 1, 0, 1, 1, 1, 1),
+        array(1, 1, 0, 1, 1, 0, 0, 0, 0, 1)
+    );
+    
+    $origin_0 = array(
+        array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+        array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+        array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+        array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+        array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+        array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+        array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+        array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+        array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+        array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+    );
+    
+    $arry_temp =array();
+    
+    foreach ($origin as $key_1 => $val_1) {
+        foreach($val_1 as $key_2 => $val_2){
+            if($val_2 == 1){
+                $check = new check;
+                    $arry_temp[] = $check->check_2($origin,$key_1,$key_2);
+            }
+        }
+        // echo '<br>';
+    }
+    
+    // array_unique($arry_temp);
+    // print_r($arry_temp);
+    #將同一個陣列中有相同的值刪除
+    foreach($arry_temp as $k => $v){
+        $temp[$k] = array_unique($v);
+    }
+    // print_r($temp);
+    // print_r($origin);
+    #計算第二層陣列，值的數量，按照相同的Key值存入相對應的總數量
+    foreach($temp as $k => $v){
+        $temp_count[$k] = count($v);
+    }
+    arsort($temp_count); #按照值由大到小的排序
+    
+    #將排序完成的Key值取出
+    $array_keys = array_keys($temp_count);
+    // print_r($array_keys);
+    // print_r($temp[$array_keys[0]]);
+    foreach($temp[$array_keys[0]] as $k => $v){
+        $v  = explode(',',$v);
+        $origin_0[$v[0]][$v[1]] = 1;
+    }
+    
+    #列印出結果
+    foreach ($origin_0 as $key_1 => $val_1) {
+        foreach($val_1 as $key_2 => $val_2){
+            echo $val_2;
+        }
+        echo '<br>';
+    }
+        
+
+
+
+    class check{
+        public $ary_eturn = array();
+       
+        function check_2($origin,$x,$y){
+                $this->ary_eturn[] = $x.','.$y; 
+                $origin[$x][$y] = 2;
+        
+                if($origin[$x-1][$y]==1){#上
+                    $this->ary_eturn[] = ($x-1).','.$y;
+                    $this->origin[$x-1][$y] = 2;
+                    $this->check_2($origin,($x-1),$y);
+                    
+                }
+                if($origin[$x][$y+1]==1){#右
+                    $this->ary_eturn[]= $x.','.($y+1);  
+                    $this->origin[$x][$y+1] = 2; 
+                    $this->check_2($origin,$x,$y+1);
+                    
+                }
+                if($origin[$x+1][$y]==1){#下
+                    $this->ary_eturn[] = ($x+1).','.$y;
+                    $this->origin[$x+1][$y] = 2;
+                    $this->check_2($origin,($x+1),$y);
+                    
+                }
+                if($origin[$x][$y-1]==1){#左
+                     $this->ary_eturn[] = $x.','.($y-1);
+                     $this->origin[$x][$y-1] = 2;
+                     $this->check_2($origin,$x,($y-1));
+                     
+                }
+            
+            return  $this->ary_eturn;
+        }  
+        function get_origin(){
+            return $this->origin;
+        }
+    }
+
+?>
